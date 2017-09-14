@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'friends/css/style.css' %}" />
+    <title>Авторизация</title>
+</head>
+<body>
+    {% load socialaccount %}
+    {% if user.is_authenticated %}
+             <meta http-equiv="refresh" content="0; URL=/{{user.socialaccount_set.all.0.uid}}">
+    {% else %}
+             <a class="auth" href="{% provider_login_url "vk" method="oauth2" %}">Авторизация</a>
+    {% endif %}
+</body>
+</html>

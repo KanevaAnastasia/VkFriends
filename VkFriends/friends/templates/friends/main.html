@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'friends/css/style.css' %}" />
+    <title>Ваши друзья</title>
+</head>
+<body>
+    {% load socialaccount %}
+    {% load i18n %}
+    {% if user.is_authenticated  and url_id == user.socialaccount_set.all.0.uid %}
+        <header>
+            <form method="post" action="{% url 'account_logout' %}">
+              {% csrf_token %}
+              {% if redirect_field_value %}
+                  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+              {% endif %}
+              <button class="auth out" type="submit">{% trans 'Sign Out' %}</button>
+            </form>
+        </header>
+        <h1>Здравствуйте, {{user_vk.first_name}} {{user_vk.last_name}}</h1>
+        <div class="user">
+            <a class = "photo" href="http://vk.com/id{{url_id}}"><img widht = "200px" src={{user_vk.photo_200}}></a>
+        </div>
+        {% if friends %}
+            <h2>Ваши друзья:</h2>
+            <ul>
+            {% for friend in friends %}
+                <li><a class="friends" href="http://vk.com/id{{friend.uid}}"><p>{{ friend.first_name }}  {{friend.last_name}}</p>
+                <img src={{friend.photo_100}}></a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <h2>Мы не нашли у Вас друзей :(</h2>
+        {% endif %}
+    {% else %}
+         <meta http-equiv="refresh" content="0; URL=/">
+    {% endif %}
+</body>
+</html>
